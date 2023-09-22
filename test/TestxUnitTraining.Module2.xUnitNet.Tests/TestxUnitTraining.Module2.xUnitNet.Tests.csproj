@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Practise\InputData.json">
+    <None Update="PractiseTheories\InputData.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

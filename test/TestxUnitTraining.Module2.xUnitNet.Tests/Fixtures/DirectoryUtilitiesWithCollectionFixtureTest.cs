@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestxUnitTraining.Module2.xUnitNet.Tests.S7Fixtures
+namespace TestxUnitTraining.Module2.xUnitNet.Tests.Fixtures
 {
     /// <summary>
     /// Esta clase usa una coleccion, que es común con otras que usen la misma colección.
@@ -12,12 +12,13 @@ namespace TestxUnitTraining.Module2.xUnitNet.Tests.S7Fixtures
     /// Pero como son dos colecciones distintas a las que se hace referencia el nombre pues
     /// pueden ejecutarse en paralelo
     /// </summary>
+    [Trait("Module", "2")]
     [Collection("FixtureCollection")]
-    public class DirectoryUtilitiesTextWithCollectionFixture
+    public class DirectoryUtilitiesWithCollectionFixtureTest
     {
         private readonly DirectoryFixtureForCollection _fixture;
 
-        public DirectoryUtilitiesTextWithCollectionFixture(DirectoryFixtureForCollection fixture)
+        public DirectoryUtilitiesWithCollectionFixtureTest(DirectoryFixtureForCollection fixture)
         {
             _fixture = fixture;
             _fixture.GenerateFiles();
@@ -42,7 +43,7 @@ namespace TestxUnitTraining.Module2.xUnitNet.Tests.S7Fixtures
         [Fact]
         public void FIlesExist_ShouldBeFalse_IfDifferentFiles()
         {
-            var result = DirectoryUtilities.FilesExist(new string[] {"File1", "File2"}, _fixture.DirectoryPath);
+            var result = DirectoryUtilities.FilesExist(new string[] { "File1", "File2" }, _fixture.DirectoryPath);
 
             Assert.False(result);
         }

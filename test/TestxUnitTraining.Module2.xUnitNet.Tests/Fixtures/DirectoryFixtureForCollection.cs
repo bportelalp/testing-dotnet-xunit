@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestxUnitTraining.Module2.xUnitNet.Tests.S7Fixtures
+namespace TestxUnitTraining.Module2.xUnitNet.Tests.Fixtures
 {
     /// <summary>
     /// Esta clase es un accesorio para crear una serie de archivos en una carpeta al inicio del test y eliminarlos al finalizar.
+    /// Es una copia de <see cref="DirectoryFixture"/> para hacer la demo de ejecutar en paralelo, pero cambia de carpeta
     /// </summary>
-    public class DirectoryFixture : IDisposable
+    public class DirectoryFixtureForCollection : IDisposable
     {
-        private const string _directory = "./tests";
+        private const string _directory = "./testsCollection";
         private const int _fileCount = 5;
         private readonly string[] _files = new string[_fileCount];
 
@@ -23,7 +24,7 @@ namespace TestxUnitTraining.Module2.xUnitNet.Tests.S7Fixtures
         /// </summary>
         public void GenerateFiles()
         {
-            if(!Directory.Exists(_directory))
+            if (!Directory.Exists(_directory))
             {
                 Directory.CreateDirectory(_directory);
             }

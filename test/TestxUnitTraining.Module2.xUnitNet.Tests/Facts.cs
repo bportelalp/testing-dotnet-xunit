@@ -4,7 +4,8 @@ namespace TestxUnitTraining.Module2.xUnitNet.Tests
     /// Usar el atributo <see cref="FactAttribute"/> para decorar métodos que realicen una única llamada
     /// de prueba sin parámetros
     /// </summary>
-    public class S1Facts
+    [Trait("Module", "2")]
+    public class Facts
     {
         [Fact]
         public void Sum_ShouldBe5_Ifx3Andy2()

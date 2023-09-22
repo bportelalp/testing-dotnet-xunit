@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit.Sdk;
 
-namespace TestxUnitTraining.Module2.xUnitNet.Tests.Practise
+namespace TestxUnitTraining.Module2.xUnitNet.Tests.PractiseTheories
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple =true, Inherited = false)]
     public class ColorCompositionDataAttribute : DataAttribute

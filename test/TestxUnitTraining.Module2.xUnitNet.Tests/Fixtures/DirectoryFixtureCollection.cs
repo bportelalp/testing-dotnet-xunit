@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestxUnitTraining.Module2.xUnitNet.Tests.S7Fixtures
+namespace TestxUnitTraining.Module2.xUnitNet.Tests.Fixtures
 {
     /// <summary>
     /// Esta clase define la coleccion que se usará en los tests

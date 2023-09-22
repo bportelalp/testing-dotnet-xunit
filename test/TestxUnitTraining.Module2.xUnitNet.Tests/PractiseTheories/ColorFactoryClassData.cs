@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TestxUnitTraining.Module2.xUnitNet.Tests.Practise
+namespace TestxUnitTraining.Module2.xUnitNet.Tests.PractiseTheories
 {
     public class ColorFactoryClassData : TheoryData<Color, string>
     {

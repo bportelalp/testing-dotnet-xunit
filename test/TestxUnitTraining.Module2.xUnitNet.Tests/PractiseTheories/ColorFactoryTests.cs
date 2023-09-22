@@ -10,11 +10,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace TestxUnitTraining.Module2.xUnitNet.Tests.Practise
+namespace TestxUnitTraining.Module2.xUnitNet.Tests.PractiseTheories
 {
     /// <summary>
     ///
     /// </summary>
+    [Trait("Module", "2")]
     public class ColorFactoryTests
     {
         /// <summary>
@@ -74,7 +75,7 @@ namespace TestxUnitTraining.Module2.xUnitNet.Tests.Practise
         }
 
         [Theory]
-        [ColorCompositionData("Practise/InputData.json")]
+        [ColorCompositionData("PractiseTheories/InputData.json")]
         public void GetColorComposition_JsonSourceCheck(int r, int g, int b)
         {
             Color func() => ColorFactory.GetColorComposition(r, g, b);
