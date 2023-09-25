@@ -72,6 +72,7 @@ namespace TestxUnitTraining.Module2.xUnitNet.Tests.Practise2.Services
                     Desconectar();
                 }
             }
+            ;
         }
 
         /// <summary>

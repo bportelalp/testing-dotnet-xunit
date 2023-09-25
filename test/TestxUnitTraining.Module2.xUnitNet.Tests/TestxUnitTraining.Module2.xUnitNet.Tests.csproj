@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\TestxUnitTraining.Module2.xUnitNet\TestxUnitTraining.Module2.xUnitNet.csproj" />
+    <ProjectReference Include="..\TestxUnitTraining.Tests.Common\TestxUnitTraining.Tests.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

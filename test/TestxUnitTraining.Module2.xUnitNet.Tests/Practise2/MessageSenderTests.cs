@@ -5,23 +5,24 @@ using System.Threading.Tasks;
 using TestxUnitTraining.Module2.xUnitNet.Practise2.Entities;
 using TestxUnitTraining.Module2.xUnitNet.Practise2.Services;
 using TestxUnitTraining.Module2.xUnitNet.Tests.Practise2.Services;
+using TestxUnitTraining.Tests.Common.Traits;
 using Xunit;
 
 namespace TestxUnitTraining.Module2.xUnitNet.Tests.Practise2
 {
     [Trait("Category", "Module2")]
-    public class MessageSenderTests : IDisposable
+    [UseFixtureTrait(typeof(TcpServerFixture))]
+    [Collection("TcpServer")]
+    public class MessageSenderTests
     {
-        private const int Port = 43256;
         private readonly IMessageSender _messageSender = null!;
-        private readonly TcpServer _tcpServer = null!;
-        private MessageData _messageDataRecived = null!;
-        public MessageSenderTests()
+        private readonly TcpServerFixture _server = null!;
+
+        public MessageSenderTests(TcpServerFixture tcpServer)
         {
-            _tcpServer = new TcpServer();
-            _tcpServer.Escuchar(Port);
-            _tcpServer.DataReceived += (message) => _messageDataRecived = JsonConvert.DeserializeObject<MessageData>(message)!;
-            _messageSender = new MessageSender(Port, IPAddress.Loopback);
+            _messageSender = new MessageSender(TcpServerFixture.Port, IPAddress.Loopback);
+            _server = tcpServer;
+            _server.Listen();
         }
 
         [Fact]
@@ -32,19 +33,14 @@ namespace TestxUnitTraining.Module2.xUnitNet.Tests.Practise2
 
             //Act
             await _messageSender.SendMessageAsync(messageData);
-            await Task.Delay(200); //Damos tiempo a que la comunicación se establezca y recibamos el mensaje
-
+            await Task.Delay(2000); //Damos tiempo a que la comunicación se establezca y recibamos el mensaje
+            var message = _server.GetLastMessage<MessageData>();
             //Assert
-            Assert.NotNull(_messageDataRecived);
-            Assert.Equal(messageData.Date, _messageDataRecived.Date);
-            Assert.Equal(messageData.Author.Id, _messageDataRecived.Author.Id);
-            Assert.Equal(messageData.Author.Name, _messageDataRecived.Author.Name);
-            Assert.Equal(messageData.Message, _messageDataRecived.Message);
-        }
-
-        public void Dispose()
-        {
-            _tcpServer.Desconectar();
+            Assert.NotNull(message);
+            Assert.Equal(messageData.Date, message.Date);
+            Assert.Equal(messageData.Author.Id, message.Author.Id);
+            Assert.Equal(messageData.Author.Name, message.Author.Name);
+            Assert.Equal(messageData.Message, message.Message);
         }
     }
 }

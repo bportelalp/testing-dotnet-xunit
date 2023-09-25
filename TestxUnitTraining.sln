@@ -7,9 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4CD68A70-60D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FA45DB65-CC21-4ED1-B3A9-AD47DC2F9EB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestxUnitTraining.Module2.xUnitNet.Tests", "test\TestxUnitTraining.Module2.xUnitNet.Tests\TestxUnitTraining.Module2.xUnitNet.Tests.csproj", "{B827524D-8202-4C39-9EFE-D277FA4FE798}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestxUnitTraining.Module2.xUnitNet.Tests", "test\TestxUnitTraining.Module2.xUnitNet.Tests\TestxUnitTraining.Module2.xUnitNet.Tests.csproj", "{B827524D-8202-4C39-9EFE-D277FA4FE798}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestxUnitTraining.Module2.xUnitNet", "src\TestxUnitTraining.Module2.xUnitNet\TestxUnitTraining.Module2.xUnitNet.csproj", "{C82E2C57-036A-4DA1-8949-206A84F4D0EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestxUnitTraining.Module2.xUnitNet", "src\TestxUnitTraining.Module2.xUnitNet\TestxUnitTraining.Module2.xUnitNet.csproj", "{C82E2C57-036A-4DA1-8949-206A84F4D0EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestxUnitTraining.Tests.Common", "test\TestxUnitTraining.Tests.Common\TestxUnitTraining.Tests.Common.csproj", "{04E8F034-7463-4600-9E19-DA1ED6D61C3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{C82E2C57-036A-4DA1-8949-206A84F4D0EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C82E2C57-036A-4DA1-8949-206A84F4D0EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C82E2C57-036A-4DA1-8949-206A84F4D0EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04E8F034-7463-4600-9E19-DA1ED6D61C3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04E8F034-7463-4600-9E19-DA1ED6D61C3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04E8F034-7463-4600-9E19-DA1ED6D61C3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04E8F034-7463-4600-9E19-DA1ED6D61C3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{B827524D-8202-4C39-9EFE-D277FA4FE798} = {FA45DB65-CC21-4ED1-B3A9-AD47DC2F9EB8}
 		{C82E2C57-036A-4DA1-8949-206A84F4D0EB} = {4CD68A70-60DA-40EA-909B-F09374945981}
+		{04E8F034-7463-4600-9E19-DA1ED6D61C3D} = {FA45DB65-CC21-4ED1-B3A9-AD47DC2F9EB8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CEC9A356-F4AA-4903-8AE1-B0B0B29F1C0C}

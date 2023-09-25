@@ -28,6 +28,7 @@ namespace TestxUnitTraining.Module2.xUnitNet.Practise2.Services
                     await writter.WriteLineAsync(json);
                     await writter.FlushAsync();
                 }
+                tcpClient.Close();
             }
         }
     }
