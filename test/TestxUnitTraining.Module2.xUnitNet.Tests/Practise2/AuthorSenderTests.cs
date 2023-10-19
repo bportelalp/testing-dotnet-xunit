@@ -10,7 +10,7 @@ using Xunit;
 
 namespace TestxUnitTraining.Module2.xUnitNet.Tests.Practise2
 {
-    [Trait("Category", "Module2")]
+    [Trait("Module", "2")]
     [UseFixtureTrait(typeof(TcpServerFixture))]
     [Collection("TcpServer")]
     public class AuthorSenderTests

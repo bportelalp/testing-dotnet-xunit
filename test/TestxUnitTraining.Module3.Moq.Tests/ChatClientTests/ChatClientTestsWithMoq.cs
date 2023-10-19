@@ -5,16 +5,18 @@ using System.Threading.Tasks;
 using Chat.Common.Entities;
 using Xunit;
 using TextxUnitTraining.Module3.Moq.Tests.ChatFakes;
+using Moq;
+using System.Linq;
 
 namespace TextxUnitTraining.Module3.Moq.Tests.ChatClientTests
 {
     [Trait("Module", "3")]
-    public class ChatClientTests : IDisposable
+    [Trait("ObjectSim", "Moq")]
+    public class ChatClientTestsWithMoq : IDisposable
     {
         private readonly IChatClient _chatClient;
-        private readonly ChatApiClientFake _chatApiFake;
 
-        public ChatClientTests()
+        public ChatClientTestsWithMoq()
         {
             var messages = new List<ChatMessage>
             {
@@ -25,11 +27,35 @@ namespace TextxUnitTraining.Module3.Moq.Tests.ChatClientTests
                     Date = DateTime.Now
                 }
             };
-            _chatApiFake = new ChatApiClientFake();
-            _chatApiFake.SetFakeMessages(messages);
-            IUserApiClient userApi = new UserApiClientFake();
-            _chatClient = new ChatClient(_chatApiFake, userApi);
             //Creacion y configuracion de Mocks y creacion de IchatClient
+
+            var chatApiMoq = Mock.Of<IChatApiClient>();
+            /*
+            Mock ChatApiClient:
+            - Cuando se envia un mensaje se usa el callback para ir guardando los mensajes previos que se han enviado. Se asume que
+                el mensaje siempre se envía de forma correcta
+            - Cuando se obtienen los mensajes se devuelve esa lista siempre.
+             */
+            Mock.Get(chatApiMoq)
+                .Setup(api => api.SendMessageAsync(It.IsAny<ChatMessage>()))
+                .Callback((ChatMessage  msg) => messages.Add(msg))
+                .Returns(Task.FromResult(true));
+
+            Mock.Get(chatApiMoq)
+                .Setup(api => api.GetChatMessagesAsync())
+                .Returns(Task.FromResult(messages.AsEnumerable()));
+
+
+            Func<string, string, Task<ChatUser>> userApiReturns = (string user, string pass) => Task.FromResult(new ChatUser() { IdUser = 1, Name = user, Password = pass });
+            var userApiMoq = Mock.Of<IUserApiClient>();
+            Mock.Get(userApiMoq)
+                .Setup(us => us.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(userApiReturns);
+            Mock.Get(userApiMoq)
+                .Setup(us => us.LoginAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(userApiReturns);
+
+            _chatClient = new ChatClient(chatApiMoq, userApiMoq);
         }
 
         [Theory]
@@ -179,7 +205,6 @@ namespace TextxUnitTraining.Module3.Moq.Tests.ChatClientTests
                 }
             };
             //Modificacion de Mock
-            _chatApiFake.SetFakeMessages(messages);
 
             await _chatClient.LoginAsync("Usuario1", "P2ssw0rd!");
             _chatClient.OverwriteLastLine += (sender, _) => eventRecived = true;
