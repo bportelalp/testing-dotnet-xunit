@@ -15,6 +15,8 @@ namespace TextxUnitTraining.Module3.Moq.Tests.ChatClientTests
     public class ChatClientTestsWithMoq : IDisposable
     {
         private readonly IChatClient _chatClient;
+        private readonly IChatApiClient _chatApiClient;
+        private readonly IUserApiClient _userApiClient;
 
         public ChatClientTestsWithMoq()
         {
@@ -44,6 +46,7 @@ namespace TextxUnitTraining.Module3.Moq.Tests.ChatClientTests
             Mock.Get(chatApiMoq)
                 .Setup(api => api.GetChatMessagesAsync())
                 .Returns(Task.FromResult(messages.AsEnumerable()));
+            
 
 
             Func<string, string, Task<ChatUser>> userApiReturns = (string user, string pass) => Task.FromResult(new ChatUser() { IdUser = 1, Name = user, Password = pass });
@@ -55,6 +58,8 @@ namespace TextxUnitTraining.Module3.Moq.Tests.ChatClientTests
                 .Setup(us => us.LoginAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(userApiReturns);
 
+            _chatApiClient = chatApiMoq;
+            _userApiClient = userApiMoq;
             _chatClient = new ChatClient(chatApiMoq, userApiMoq);
         }
 
@@ -97,18 +102,22 @@ namespace TextxUnitTraining.Module3.Moq.Tests.ChatClientTests
 
             //Assert
             Assert.Equal(expected, result);
+            Mock.Get(_userApiClient)
+                .Verify(u => u.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>()), expected ? Times.Once(): Times.Never());
         }
 
         [Fact]
         public void CreateUserAsync_ShouldBeArgumentNullException_IfArgumentNull()
         {
             //Arrange
-
             //Act
             Func<Task> act = async () => { _ = await _chatClient.CreateUserAsync(null, null); };
 
             //Assert
             Assert.ThrowsAsync<ArgumentNullException>(act);
+            // El Mock no pudo ser llamado porque los argumentos se deben comprobar en el cliente, no en la api
+            Mock.Get(_userApiClient)
+                .Verify(u => u.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
 
         }
 
@@ -125,6 +134,10 @@ namespace TextxUnitTraining.Module3.Moq.Tests.ChatClientTests
 
             //Assert
             Assert.True(result);
+            Mock.Get(_userApiClient)
+                .Verify(u => u.LoginAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+            Mock.Get(_chatApiClient)
+                .Verify(u => u.SendMessageAsync(It.IsAny<ChatMessage>()), Times.Once());
         }
 
         [Fact]
@@ -138,6 +151,8 @@ namespace TextxUnitTraining.Module3.Moq.Tests.ChatClientTests
 
             //Assert
             Assert.False(result);
+            Mock.Get(_chatApiClient)
+                .Verify(u => u.SendMessageAsync(It.IsAny<ChatMessage>()), Times.Never());
         }
 
         [Fact]
@@ -205,8 +220,12 @@ namespace TextxUnitTraining.Module3.Moq.Tests.ChatClientTests
                 }
             };
             //Modificacion de Mock
+            foreach (var msg in messages)
+            {
+                await _chatApiClient.SendMessageAsync(msg);
+            }
 
-            await _chatClient.LoginAsync("Usuario1", "P2ssw0rd!");
+            await _chatClient.LoginAsync("Usuario3", "P2ssw0rd!");
             _chatClient.OverwriteLastLine += (sender, _) => eventRecived = true;
             _chatClient.Connect();
 
