@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chat.Common.Entities;
 using Xunit;
-using TextxUnitTraining.Module3.Moq.Tests.ChatFakes;
 using Moq;
 using System.Linq;
 
 namespace TestxUnitTraining.Module4.FluentAssertions.Tests.ChatClientTests
 {
-    [Trait("Module", "3")]
+    [Trait("Module", "4")]
     [Trait("ObjectSim", "Moq")]
+    [Trait("Category","FluentAssertions")]
     public class ChatClientTestsWithMoq : IDisposable
     {
         private readonly IChatClient _chatClient;
@@ -74,7 +74,7 @@ namespace TestxUnitTraining.Module4.FluentAssertions.Tests.ChatClientTests
             var result = await _chatClient.LoginAsync(username, password);
 
             //Assert
-            Assert.Equal(expected, result);
+            result.Should().Be(expected);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace TestxUnitTraining.Module4.FluentAssertions.Tests.ChatClientTests
             Func<Task> act = async () => { _ = await _chatClient.LoginAsync(null, null); };
 
             //Assert
-            Assert.ThrowsAsync<ArgumentNullException>(act);
+            act.Should().ThrowAsync<ArgumentNullException>();
 
         }
 
@@ -101,7 +101,7 @@ namespace TestxUnitTraining.Module4.FluentAssertions.Tests.ChatClientTests
             var result = await _chatClient.CreateUserAsync(username, password);
 
             //Assert
-            Assert.Equal(expected, result);
+            result.Should().Be(expected);
             Mock.Get(_userApiClient)
                 .Verify(u => u.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>()), expected ? Times.Once() : Times.Never());
         }
@@ -114,7 +114,7 @@ namespace TestxUnitTraining.Module4.FluentAssertions.Tests.ChatClientTests
             Func<Task> act = async () => { _ = await _chatClient.CreateUserAsync(null, null); };
 
             //Assert
-            Assert.ThrowsAsync<ArgumentNullException>(act);
+            act.Should().ThrowAsync<ArgumentNullException>();
             // El Mock no pudo ser llamado porque los argumentos se deben comprobar en el cliente, no en la api
             Mock.Get(_userApiClient)
                 .Verify(u => u.CreateUserAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never());
@@ -133,7 +133,7 @@ namespace TestxUnitTraining.Module4.FluentAssertions.Tests.ChatClientTests
             var result = await _chatClient.SendMessageAsync(message);
 
             //Assert
-            Assert.True(result);
+            result.Should().BeTrue();
             Mock.Get(_userApiClient)
                 .Verify(u => u.LoginAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
             Mock.Get(_chatApiClient)
@@ -150,7 +150,7 @@ namespace TestxUnitTraining.Module4.FluentAssertions.Tests.ChatClientTests
             var result = await _chatClient.SendMessageAsync(message);
 
             //Assert
-            Assert.False(result);
+            result.Should().BeFalse();
             Mock.Get(_chatApiClient)
                 .Verify(u => u.SendMessageAsync(It.IsAny<ChatMessage>()), Times.Never());
         }
@@ -158,52 +158,55 @@ namespace TestxUnitTraining.Module4.FluentAssertions.Tests.ChatClientTests
         [Fact]
         public async Task NewMessageRecived_ShouldBeRaised_IfConnect()
         {
-            var eventRecived = false;
+            using var monitoredSubject = _chatClient.Monitor();
+
             await _chatClient.LoginAsync("Usuario1", "P2ssw0rd!");
-            _chatClient.NewMessageRecived += (sender, _) => eventRecived = true;
+            _chatClient.NewMessageRecived += (_, _) => { };
             _chatClient.Connect();
 
             //Act
             await Task.Delay(100); //Le damos tiempo para que se ejecute el evento
 
             //Assert
-            Assert.True(eventRecived);
+            monitoredSubject.Should().Raise(nameof(IChatClient.NewMessageRecived))
+                .WithSender(_chatClient);
         }
 
         [Fact]
         public async Task OverwriteLastLine_ShouldBeRaised_IfOneMessageAndAuthorIsWhoseIsLogged()
         {
-            var eventRecived = false;
+            using var monitoredSubject = _chatClient.Monitor();
             await _chatClient.LoginAsync("Usuario3", "P2ssw0rd!");
-            _chatClient.OverwriteLastLine += (sender, _) => eventRecived = true;
+            _chatClient.OverwriteLastLine += (_, _) => { };
             _chatClient.Connect();
 
             //Act
             await Task.Delay(100); //Le damos tiempo para que se ejecute el evento
 
             //Assert
-            Assert.True(eventRecived);
+            monitoredSubject.Should().Raise(nameof(IChatClient.OverwriteLastLine))
+                .WithSender(_chatClient);
         }
 
         [Fact]
         public async Task OverwriteLastLine_ShouldNotBeRaised_IfOneMessageAndAuthorIsOther()
         {
-            var eventRecived = false;
+            using var monitoredSubject = _chatClient.Monitor();
             await _chatClient.LoginAsync("Usuario1", "P2ssw0rd!");
-            _chatClient.OverwriteLastLine += (sender, _) => eventRecived = true;
+            _chatClient.OverwriteLastLine += (_, _) => { };
             _chatClient.Connect();
 
             //Act
             await Task.Delay(100); //Le damos tiempo para que se ejecute el evento
 
             //Assert
-            Assert.False(eventRecived);
+            monitoredSubject.Should().NotRaise(nameof(IChatClient.OverwriteLastLine));
         }
 
         [Fact]
         public async Task OverwriteLastLine_ShouldNotBeRaised_IfMoreThanOneMessage()
         {
-            var eventRecived = false;
+            using var monitoredSubject = _chatClient.Monitor();
             var messages = new List<ChatMessage>
             {
                 new ChatMessage
@@ -226,14 +229,14 @@ namespace TestxUnitTraining.Module4.FluentAssertions.Tests.ChatClientTests
             }
 
             await _chatClient.LoginAsync("Usuario3", "P2ssw0rd!");
-            _chatClient.OverwriteLastLine += (sender, _) => eventRecived = true;
+            _chatClient.OverwriteLastLine += (_, _) => { };
             _chatClient.Connect();
 
             //Act
             await Task.Delay(100); //Le damos tiempo para que se ejecute el evento
 
             //Assert
-            Assert.False(eventRecived);
+            monitoredSubject.Should().NotRaise(nameof(IChatClient.OverwriteLastLine));
         }
 
         public void Dispose()
