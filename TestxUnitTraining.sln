@@ -31,6 +31,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestxUnitTraining.Module4.F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestxUnitTraining.Module5.Advanced.Tests", "test\TestxUnitTraining.Module5.Advanced.Tests\TestxUnitTraining.Module5.Advanced.Tests.csproj", "{94CDA57E-CCC4-45E3-884B-7BD581022BE2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{06AD0B10-C3E8-4796-8737-EED281F174DF}"
+	ProjectSection(SolutionItems) = preProject
+		solution-items\generate-code-coverage.ps1 = solution-items\generate-code-coverage.ps1
+		solution-items\install-reportgenerator.ps1 = solution-items\install-reportgenerator.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
